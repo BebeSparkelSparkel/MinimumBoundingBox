@@ -8,19 +8,6 @@ from math import pi
 
 class TestMinimumBoundingBox(unittest.TestCase):
   def test_minimum_bounding_box(self):
-    # self.assertEqual(
-    #     minimum_bounding_box(((0,0),(2,0),(1,1))),
-    #     BoundingBox(
-    #         area = 2,
-    #         length_parallel = 2,
-    #         length_orthogonal = 1,
-    #         rectangle_center = (1,.5),
-    #         unit_vector = (1,0),
-    #         unit_vector_angle = 0,
-    #         corner_points = {(0,0),(2,0),(2,1),(0,1)}
-    #       )
-    #   )
-
     bb = minimum_bounding_box(((0,0),(3,0),(1,1)))
     self.assertAlmostEqual(bb.area, 3)
     self.assertEqual(bb.length_parallel, 3)
@@ -30,20 +17,7 @@ class TestMinimumBoundingBox(unittest.TestCase):
     self.assertEqual(bb.unit_vector_angle, 0)
     self.assertEqual(bb.corner_points, {(0,-1.1102230246251565e-16),(3,0),(3,1),(0,1)})
 
-    # self.assertEqual(
-    #     minimum_bounding_box(((0,0),(0,2),(-1,0),(-.9, 1))),
-    #     BoundingBox(
-    #         area = 2,
-    #         length_parallel = 2,
-    #         length_orthogonal = 1,
-    #         rectangle_center = (-.5, 1),
-    #         unit_vector = (0,1),
-    #         unit_vector_angle = pi/2,
-    #         corner_points = {(0,0),(0,2),(-1,2),(-1,0)}
-    #       )
-    #   )
     bb = minimum_bounding_box(((0,0),(0,2),(-1,0),(-.9, 1)))
-    print(bb)
     self.assertAlmostEqual(bb.area, 2)
     self.assertEqual(bb.length_parallel, 1)
     self.assertEqual(bb.length_orthogonal, 2)
@@ -52,9 +26,7 @@ class TestMinimumBoundingBox(unittest.TestCase):
     self.assertEqual(bb.unit_vector_angle, 0)
     self.assertEqual(bb.corner_points, {(1.6653345369377348e-16,0),(1.6653345369377348e-16,2),(-1,2),(-1,0)})
 
-    # self.assertEqual(
-    #     minimum_bounding_box()
-    #   )
+    bb = 
 
 
 if __name__ == '__main__': unittest.main()
