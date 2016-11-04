@@ -2,78 +2,41 @@
 
 from scipy.spatial import ConvexHull
 from math import sqrt
-import numpy
+import numpy as np
 from math import atan2, cos, sin, pi
 from collections import namedtuple
 
 
-def get_unit_vector(pt0, pt1):
+def unit_vector(pt0, pt1):
     # returns an unit vector that points in the direction of pt0 to pt1
     dis_0_to_1 = sqrt((pt0[0] - pt1[0])**2 + (pt0[1] - pt1[1])**2)
-    # return (pt1[0] - pt0[0]) / dis_0_to_1, \
-    #        (pt1[1] - pt0[1]) / dis_0_to_1
-    return tuple((pt1[i] - pt0[i]) / dis_0_to_1 for i in range(2))
+    return (pt1[0] - pt0[0]) / dis_0_to_1, \
+           (pt1[1] - pt0[1]) / dis_0_to_1
 
 
 def orthogonal_vector(vector):
     # from vector returns a orthogonal/perpendicular vector of equal length
     return -1 * vector[1], vector[0]
 
-Rectangle = namedtuple('Rectangle',
-    (
-        'area',
-        'length_parallel',
-        'length_orthogonal',
-        'rectangle_center',
-        'unit_vector',
-        'orthogonal_vector',
-        'corner_points'
-    )
-)
-
-def min_length_along_vector(unit_vector, point_cloud):
-    '''
-    returns the distance between the points along unit_vector
-    that have the minimum and maximum displacements along unit_vector
-    unit_vector must be of length one like (0, 1)
-    '''
-    unit_vector = get_unit_vector(*unit_vector)
-    displacements = tuple(numpy.dot(unit_vector, pt) for pt in point_cloud)
-    return max(displacements) - min(displacements)
-
 
 def bounding_area(index, hull):
-    # unit_vector_p = get_unit_vector(hull[index], hull[index+1])
-    # unit_vector_o = orthogonal_vector(unit_vector_p)
+    unit_vector_p = unit_vector(hull[index], hull[index+1])
+    unit_vector_o = orthogonal_vector(unit_vector_p)
 
-    # dis_p = tuple(numpy.dot(unit_vector_p, pt) for pt in hull)
-    # dis_o = tuple(numpy.dot(unit_vector_o, pt) for pt in hull)
+    dis_p = tuple(np.dot(unit_vector_p, pt) for pt in hull)
+    dis_o = tuple(np.dot(unit_vector_o, pt) for pt in hull)
 
-    # min_p = min(dis_p)
-    # min_o = min(dis_o)
-    # len_p = max(dis_p) - min_p
-    # len_o = max(dis_o) - min_o
+    min_p = min(dis_p)
+    min_o = min(dis_o)
+    len_p = max(dis_p) - min_p
+    len_o = max(dis_o) - min_o
 
-    # return {'area': len_p * len_o,
-    #         'length_parallel': len_p,
-    #         'length_orthogonal': len_o,
-    #         'rectangle_center': (min_p + len_p / 2, min_o + len_o / 2),
-    #         'unit_vector': unit_vector_p,
-    #         }
-
-    # return Rectangle(
-    #         area = len_p * len_o,
-    #         length_parallel = len_p,
-    #         length_orthogonal = len_o,
-    #         rectangle_center = (min_p + len_p / 2, min_o + len_o / 2),
-    #         unit_vector = unit_vector_p,
-    #     )
-
-    # return (max(dis_p) - min_p) * (max(dis_o) - min_o)
-
-    unit_vector = get_unit_vector(hull[index], hull[index+1])
-    return min_length_along_vector(unit_vector, hull) * \
-           min_length_along_vector(orthogonal_vector(unit_vector), hull)
+    return {'area': len_p * len_o,
+            'length_parallel': len_p,
+            'length_orthogonal': len_o,
+            'rectangle_center': (min_p + len_p / 2, min_o + len_o / 2),
+            'unit_vector': unit_vector_p,
+            }
 
 
 def to_xy_coordinates(unit_vector_angle, point):
@@ -113,20 +76,16 @@ def rectangle_corners(rectangle):
     return rotate_points(rectangle['rectangle_center'], rectangle['unit_vector_angle'], corner_points)
 
 
-Rectangle = namedtuple('Rectangle',
-    (
-        'area',
-        'length_parallel',
-        'length_orthogonal',
-        'rectangle_center',
-        'unit_vector',
-        'orthogonal_vector',
-        'corner_points',
-        'unit_vector_angle',
-        'rectangle_center'
+BoundingBox = namedtuple('BoundingBox', (
+            'area',
+            'length_parallel',
+            'length_orthogonal',
+            'rectangle_center',
+            'unit_vector',
+            'unit_vector_angle',
+            'corner_points'
+        )
     )
-)
-
 
 
 # use this function to find the listed properties of the minimum bounding box of a point cloud
@@ -143,24 +102,28 @@ def minimum_bounding_box(points):
     #                   (it's orthogonal vector can be found with the orthogonal_vector function
     #               unit_vector_angle: angle of the unit vector
 
-    assert len(points) > 2
+    if len(points) <= 2: raise ValueError('More than two points required.')
+
     hull_ordered = [points[index] for index in ConvexHull(points).vertices]
     hull_ordered.append(hull_ordered[0])
+    hull_ordered = tuple(hull_ordered)
 
-    # min_rectangle = bounding_area(0, hull_ordered)
-    # for i in range(1, len(hull_ordered)-1):
-    #     rectangle = bounding_area(i, hull_ordered)
-    #     if rectangle['area'] < min_rectangle['area']:
-    #         min_rectangle = rectangle
+    min_rectangle = bounding_area(0, hull_ordered)
+    for i in range(1, len(hull_ordered)-1):
+        rectangle = bounding_area(i, hull_ordered)
+        if rectangle['area'] < min_rectangle['area']:
+            min_rectangle = rectangle
 
-    # min_rectangle['unit_vector_angle'] = atan2(min_rectangle['unit_vector'][1], min_rectangle['unit_vector'][0])
-    # min_rectangle['rectangle_center'] = to_xy_coordinates(min_rectangle['unit_vector_angle'], min_rectangle['rectangle_center'])
-    # return min_rectangle
+    min_rectangle['unit_vector_angle'] = atan2(min_rectangle['unit_vector'][1], min_rectangle['unit_vector'][0])
+    min_rectangle['rectangle_center'] = to_xy_coordinates(min_rectangle['unit_vector_angle'], min_rectangle['rectangle_center'])
 
-    smallest_side_index = min(range(len(hull_ordered)-1), key=lambda i: bounding_area(i, hull_ordered))
-
-    
-
-
-
-
+    # this is ugly but a quick hack and is being changed in the speedup branch
+    return BoundingBox(
+        area = min_rectangle['area'],
+        length_parallel = min_rectangle['length_parallel'],
+        length_orthogonal = min_rectangle['length_orthogonal'],
+        rectangle_center = min_rectangle['rectangle_center'],
+        unit_vector = min_rectangle['unit_vector'],
+        unit_vector_angle = min_rectangle['unit_vector_angle'],
+        corner_points = set(rectangle_corners(min_rectangle))
+    )
