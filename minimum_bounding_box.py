@@ -76,23 +76,22 @@ def rectangle_corners(rectangle):
     return rotate_points(rectangle['rectangle_center'], rectangle['unit_vector_angle'], corner_points)
 
 
-BoundingBox = namedtuple('BoundingBox', (
-            'area',
-            'length_parallel',
-            'length_orthogonal',
-            'rectangle_center',
-            'unit_vector',
-            'unit_vector_angle',
-            'corner_points'
-        )
-    )
+BoundingBox = namedtuple('BoundingBox', ('area',
+                                         'length_parallel',
+                                         'length_orthogonal',
+                                         'rectangle_center',
+                                         'unit_vector',
+                                         'unit_vector_angle',
+                                         'corner_points'
+                                        )
+)
 
 
 # use this function to find the listed properties of the minimum bounding box of a point cloud
 def minimum_bounding_box(points):
     # Requires: points to be a list or tuple of 2D points. ex: ((5, 2), (3, 4), (6, 8))
     #           needs to be more than 2 points
-    # Effects:  returns a dictionary that contains:
+    # Effects:  returns a namedtuple that contains:
     #               area: area of the rectangle
     #               length_parallel: length of the side that is parallel to unit_vector
     #               length_orthogonal: length of the side that is orthogonal to unit_vector
@@ -101,6 +100,7 @@ def minimum_bounding_box(points):
     #               unit_vector: direction of the length_parallel side. RADIANS
     #                   (it's orthogonal vector can be found with the orthogonal_vector function
     #               unit_vector_angle: angle of the unit vector
+    #               corner_points: set that contains the corners of the rectangle
 
     if len(points) <= 2: raise ValueError('More than two points required.')
 

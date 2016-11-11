@@ -26,7 +26,7 @@ class TestMinimumBoundingBox(unittest.TestCase):
     self.assertEqual(bb.unit_vector_angle, 0)
     self.assertEqual(bb.corner_points, {(1.6653345369377348e-16,0),(1.6653345369377348e-16,2),(-1,2),(-1,0)})
 
-    bb = 
+    # bb = 
 
 
 if __name__ == '__main__': unittest.main()
