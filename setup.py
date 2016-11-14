@@ -8,6 +8,6 @@ setup(name='MinimumBoundingBox',
       author_email='williamrusnack@gmail.com',
       url='https://github.com/BebeSparkelSparkel/MinimumBoundingBox',
       classifiers=['Development Status :: 2 - Pre-Alpha', 'Programming Language :: Python :: 3'],
-      py_modules=[minimum_bounding_box],
+      py_modules=['minimum_bounding_box'],
       install_requires=['scipy==0.18.1', 'numpy==1.11.2'],
      )
