@@ -5,10 +5,10 @@ Finds the minimum bounding box from a point cloud.
 
 ### Example
 ```python
-from MinimumBoundingBox import minimum_bounding_box
+from MinimumBoundingBox import MinimumBoundingBox
 
 points = ( (1,2), (5,4), (-1,-3) )
-bounding_box = minimum_bounding_box(points)  # returns namedtuple
+bounding_box = MinimumBoundingBox(points)  # returns namedtuple
 
 bounding_box.area  # 16
 bounding_box.rectangle_center  # (1.3411764705882352, 1.0647058823529414)
@@ -22,7 +22,7 @@ pip3 install git+git://github.com/BebeSparkelSparkel/MinimumBoundingBox.git@mast
 pip3.5 install git+git://github.com/BebeSparkelSparkel/MinimumBoundingBox.git@master
 ```
 
-**minimum_bounding_box**(points)  
+**MinimumBoundingBox**(points)  
 Returns the properties of the bounding box
 * **area**: area of the rectangle  
 * length_parallel: length of the side that is parallel to unit_vector  

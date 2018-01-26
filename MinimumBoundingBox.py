@@ -1,4 +1,4 @@
-# important functions: minimum_bounding_box
+# important functions: MinimumBoundingBox
 
 from scipy.spatial import ConvexHull
 from math import sqrt
@@ -88,7 +88,7 @@ BoundingBox = namedtuple('BoundingBox', ('area',
 
 
 # use this function to find the listed properties of the minimum bounding box of a point cloud
-def minimum_bounding_box(points):
+def MinimumBoundingBox(points):
     # Requires: points to be a list or tuple of 2D points. ex: ((5, 2), (3, 4), (6, 8))
     #           needs to be more than 2 points
     # Effects:  returns a namedtuple that contains:
