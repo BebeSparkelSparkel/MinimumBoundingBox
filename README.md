@@ -1,4 +1,7 @@
 # MinimumBoundingBox
+## Moved to Bitbucket
+[https://bitbucket.org/william_rusnack/minimumboundingbox/src/master/](https://bitbucket.org/william_rusnack/minimumboundingbox/src/master/)
+
 Finds the minimum bounding box from a point cloud.  
 ✮✮✮✮✮✮✮✮✮✮✮✮ LIKE IT? STAR IT! ✮✮✮✮✮✮✮✮✮✮✮✮  
 
